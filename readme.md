@@ -1,49 +1,115 @@
-# Unit 6 Assignment – CICT Org Fair 2
+# CICT Org Fair
 
-## E1. Lifting State Up
+**Live Application:** https://raphaelldmitri.github.io/cict-org-fair/
 
-**Location:** `lib/screens/home_shell.dart` — `_memberships` map (line number: 26).
+**GitHub Repository:** https://github.com/RaphaelleDmitri/cict-org-fair
 
-The `HomeShell` owns the memberships because both the My Orgs screen and the Schedule screen need to know which organizations the student joined. Keeping the data in one shared place makes sure both screens display consistent information when a membership changes.
+A Flutter-based mobile and web application developed for the West Visayas State University College of Information and Communications Technology (CICT) Organization Fair. It allows users to view organization fair events and retrieve event information dynamically through Contentful CMS.
 
-## E2. IndexedStack and Preserving State
+## Features
 
-**Location:** `lib/screens/home_shell.dart` — `IndexedStack` in `build()` (line number: 58).
+- **What's On:** Displays upcoming organization fair events.
+- **Content Management:** Fetches event information dynamically from Contentful CMS.
+- **Offline Support:** Displays previously saved event information when offline.
+- **About Screen:** Displays application information and version details.
+- **Cross-Platform:** Supports Android and web platforms.
 
-The `IndexedStack` keeps the tab pages alive even when they are not currently visible. This allows the Orgs screen to retain its search text when I switch to another tab and return instead of rebuilding the page from scratch.
+## Technologies Used
 
-## E3. Closing the Drawer Before Opening About
+- Flutter and Dart
+- Contentful CMS
+- GitHub Pages
+- GitHub Actions
+- Android SDK
 
-**Location:** `lib/screens/org_list_screen.dart` — `_buildDrawer()` (line number: 118).
+## Application Information
 
-The drawer is closed using `Navigator.pop(context)` before opening the About screen with `Navigator.pushNamed()`. This removes the drawer from the screen first and makes the navigation transition behave properly.
+| Detail | Value |
+|---|---|
+| Application Name | CICT Org Fair |
+| Version | 1.1.0 |
+| Build Number | 2 |
+| Framework | Flutter |
+| CMS | Contentful |
+| Web Hosting | GitHub Pages |
 
-## E4. Wrap vs. Row
+## Getting Started
 
-**Location:** `lib/screens/org_list_screen.dart` — category `Wrap` (line number: 264).
+### Prerequisites
 
-A `Wrap` allows the filter chips to move onto another line when there is not enough horizontal space. A `Row` tries to keep all its children on one line, which can cause a horizontal overflow when the chips do not fit.
+- Flutter SDK
+- Dart SDK
+- Android Studio or Visual Studio Code
+- Git
 
-## E5. SliverGridDelegateWithMaxCrossAxisExtent
+### Installation
 
-**Location:** `lib/screens/org_list_screen.dart` — `_buildGrid()` (line number: 293).
+1. Clone the repository:
 
-`SliverGridDelegateWithMaxCrossAxisExtent` limits the maximum width of each grid item instead of forcing a fixed number of columns. Flutter calculates how many columns can fit based on the available width, so the grid can adjust to different screen sizes.
+   ```bash
+   git clone https://github.com/RaphaelleDmitri/cict-org-fair.git
+   ```
 
-## E6. Matching Tab Counts
+2. Navigate to the project directory:
 
-**Location:** `lib/screens/org_detail_screen.dart` — `DefaultTabController`, `TabBar`, and `TabBarView` (line number: 37).
+   ```bash
+   cd cict-org-fair
+   ```
 
-The controller length, the number of tabs in the `TabBar`, and the number of children in the `TabBarView` must all match. If the counts do not match, Flutter can throw an error because the controller and the displayed tab pages are inconsistent.
+3. Install dependencies:
 
-## E7. Nullable Dialog Results
+   ```bash
+   flutter pub get
+   ```
 
-**Location:** `lib/screens/my_orgs_screen.dart` — `_confirmLeave()` (line number: 28).
+4. Configure the CMS credentials using the provided `cms.example.json` as a reference. Create your own `cms.json` file with the required Contentful configuration.
 
-The result of `showDialog<bool>` is a nullable Boolean because the dialog can be dismissed without the user choosing either button. Checking `confirmed == true` ensures that the organization is removed only when the user explicitly presses Leave, not when they cancel or dismiss the dialog.
+5. Run the application:
 
-## E8. Table vs. Column of Rows
+   ```bash
+   flutter run --dart-define-from-file=cms.json
+   ```
 
-**Location:** `lib/screens/schedule_screen.dart` — `Table` widget (line number: 55).
+## Building the Application
 
-A `Table` aligns cells into shared columns, making the schedule easier to read. If I used a `Column` containing separate `Row` widgets, each row could size its children independently, causing the time, booth, and organization columns to become misaligned.
+### Web Release
+
+```bash
+flutter build web --release --dart-define-from-file=cms.json
+```
+
+### Android APK Release
+
+```bash
+flutter build apk --release --dart-define-from-file=cms.json
+```
+
+The generated APK can be found at:
+
+```text
+build/app/outputs/flutter-apk/app-release.apk
+```
+
+## Continuous Integration and Deployment
+
+The project uses GitHub Actions to automate testing and deployment.
+
+- **Continuous Integration:** Runs Flutter tests when a pull request targeting the `main` branch is created or updated.
+- **Continuous Deployment:** Automatically builds and deploys the Flutter web application to GitHub Pages whenever changes are pushed to `main`.
+- **Manual Deployment:** The deployment workflow can also be triggered manually through GitHub Actions.
+
+## Security Notes
+
+CMS configuration files, signing credentials, and keystore files are excluded from version control.
+
+The Contentful Delivery API token used by the client application should be read-only, since credentials embedded in a Flutter web application can be accessed from its compiled files.
+
+## Developer
+
+**Raphaelle Dmitri Alabanzas**  
+West Visayas State University  
+College of Information and Communications Technology
+
+---
+
+*Developed as part of the CC 207B Flutter application development activities.*
