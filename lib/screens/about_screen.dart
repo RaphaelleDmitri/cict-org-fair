@@ -1,4 +1,6 @@
+
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// Opened by name from the drawer: Navigator.pushNamed(context, '/about').
 class AboutScreen extends StatelessWidget {
@@ -6,17 +8,19 @@ class AboutScreen extends StatelessWidget {
 
   static const routeName = '/about';
 
+  static final Future<PackageInfo> _packageInfo =
+      PackageInfo.fromPlatform();
+
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('About the fair')),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Stack layers children on top of each other. Positioned pins the
-          // title to the bottom-left corner of the banner.
           SizedBox(
             height: 160,
             child: Stack(
@@ -72,6 +76,35 @@ class AboutScreen extends StatelessWidget {
               'Visit the booths, meet the officers, and join an org '
               'right from this app.',
             ),
+          ),
+
+          // Display the installed application's version and build number.
+          FutureBuilder<PackageInfo>(
+            future: _packageInfo,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const ListTile(
+                  leading: Icon(Icons.info_outline),
+                  title: Text('Version information unavailable'),
+                );
+              }
+
+              if (!snapshot.hasData) {
+                return const ListTile(
+                  leading: Icon(Icons.info_outline),
+                  title: Text('Loading version...'),
+                );
+              }
+
+              final info = snapshot.data!;
+
+              return ListTile(
+                leading: const Icon(Icons.info_outline),
+                title: Text(
+                  'Version ${info.version} (build ${info.buildNumber})',
+                ),
+              );
+            },
           ),
         ],
       ),
